@@ -33,6 +33,14 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+  webServer: {
+    command: 'npm run start',
+    url: 'http://127.0.0.1:64002',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
+  },
 
   /* Configure projects for major browsers */
   projects: [
