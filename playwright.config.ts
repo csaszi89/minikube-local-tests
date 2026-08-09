@@ -5,8 +5,9 @@ import { defineConfig, devices } from '@playwright/test';
 const namespace = process.env.K8S_NAMESPACE ?? 'default';
 const frontendServiceName = process.env.K8S_FRONTEND_SERVICE_NAME ?? 'frontend-svc';
 const backendServiceName = process.env.K8S_BACKEND_SERVICE_NAME ?? 'backend-svc';
+const backendServicePort = process.env.K8S_BACKEND_SERVICE_PORT ?? '8080';
 const frontendClusterBaseURL = `http://${frontendServiceName}.${namespace}.svc.cluster.local`;
-const backendClusterBaseURL = `http://${backendServiceName}.${namespace}.svc.cluster.local`;
+const backendClusterBaseURL = `http://${backendServiceName}.${namespace}.svc.cluster.local:${backendServicePort}`;
 const isInCluster = Boolean(process.env.KUBERNETES_SERVICE_HOST);
 const baseURL =
   process.env.UI_BASE_URL ??

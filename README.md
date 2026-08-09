@@ -44,6 +44,7 @@ When tests run inside a Kubernetes Pod, the config automatically uses cluster-in
 | `K8S_NAMESPACE` | Kubernetes namespace | `default` |
 | `K8S_FRONTEND_SERVICE_NAME` | Frontend service name | `frontend-svc` |
 | `K8S_BACKEND_SERVICE_NAME` | Backend service name | `backend-svc` |
+| `K8S_BACKEND_SERVICE_PORT` | Backend service port | `8080` |
 
 ## Structure
 
