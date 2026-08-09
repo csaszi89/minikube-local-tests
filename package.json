@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test:e2e": "playwright test",
-    "test:e2e:local": "cross-env PLAYWRIGHT_BASE_URL=http://127.0.0.1:8080 playwright test"
+    "test:e2e:local": "cross-env PLAYWRIGHT_BASE_URL=http://127.0.0.1:8080 playwright test",
+    "test:e2e:cluster": "cross-env K8S_SERVICE_NAME=my-website-nginx K8S_NAMESPACE=default playwright test"
   },
   "keywords": [],
   "author": "",

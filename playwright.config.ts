@@ -1,6 +1,14 @@
+/// <reference types="node" />
+
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? ' http://127.0.0.1:64002';
+const serviceName = process.env.K8S_SERVICE_NAME ?? 'my-website-nginx';
+const namespace = process.env.K8S_NAMESPACE ?? 'default';
+const clusterBaseURL = `http://${serviceName}.${namespace}.svc.cluster.local`;
+const isInCluster = Boolean(process.env.KUBERNETES_SERVICE_HOST);
+const baseURL =
+  process.env.PLAYWRIGHT_BASE_URL ??
+  (isInCluster ? clusterBaseURL : 'http://127.0.0.1:8080');
 
 /**
  * Read environment variables from file.
@@ -71,4 +79,15 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
+
+  /* Start local port-forward only when running outside Kubernetes and no explicit base URL was provided. */
+  webServer:
+    !isInCluster && !process.env.PLAYWRIGHT_BASE_URL
+      ? {
+          command: `kubectl port-forward -n ${namespace} svc/${serviceName} 8080:80`,
+          url: 'http://127.0.0.1:8080',
+          reuseExistingServer: !process.env.CI,
+          timeout: 120 * 1000,
+        }
+      : undefined,
 });
