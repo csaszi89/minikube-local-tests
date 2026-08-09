@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:8080';
-const serviceName = process.env.K8S_SERVICE_NAME ?? 'my-website-nginx';
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? ' http://127.0.0.1:64002';
 
 /**
  * Read environment variables from file.
@@ -72,15 +71,4 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-
-  /* Run local port-forward before tests when using default local baseURL */
-  webServer: process.env.PLAYWRIGHT_BASE_URL
-    ? undefined
-    : {
-        command: 'kubectl port-forward svc/nginx 8080:80',
-        command: `kubectl port-forward svc/${serviceName} 8080:80`,
-        url: baseURL,
-        reuseExistingServer: !process.env.CI,
-        timeout: 120 * 1000,
-      },
 });
