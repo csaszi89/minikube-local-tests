@@ -2,7 +2,7 @@
 
 import { defineConfig, devices } from '@playwright/test';
 
-const serviceName = process.env.K8S_SERVICE_NAME ?? 'my-website-nginx';
+const serviceName = process.env.K8S_SERVICE_NAME ?? 'frontend-svc';
 const namespace = process.env.K8S_NAMESPACE ?? 'default';
 const clusterBaseURL = `http://${serviceName}.${namespace}.svc.cluster.local`;
 const isInCluster = Boolean(process.env.KUBERNETES_SERVICE_HOST);
