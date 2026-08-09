@@ -22,3 +22,28 @@ test('Navigate to website and verify basic elements', async () => {
   await expect(taskManager.addTaskButton).toBeVisible();
   await expect(taskManager.addTaskButton).toBeEnabled();
 });
+
+test('Navigate to website and create a task with description', async () => {
+  const uid = crypto.randomUUID();
+  await taskManager.titleInput.fill(`New Task ${uid}`);
+  await taskManager.descriptionInput.fill('Task Description');
+  await taskManager.addTaskButton.click();
+  await expect(taskManager.taskItem(`New Task ${uid}`)).toBeVisible();
+});
+
+test('Navigate to website and create a task without description', async () => {
+  const uid = crypto.randomUUID();
+  await taskManager.titleInput.fill(`New Task ${uid}`);
+  await taskManager.descriptionInput.fill('');
+  await taskManager.addTaskButton.click();
+  await expect(taskManager.taskItem(`New Task ${uid}`)).toBeVisible();
+});
+
+test('Navigate to website and try create a task without name', async () => {
+  const initialTaskCount = await taskManager.taskItemCount;
+  await taskManager.titleInput.fill('');
+  await taskManager.descriptionInput.fill('');
+  await taskManager.addTaskButton.click();
+  const finalTaskCount = await taskManager.taskItemCount;
+  expect(finalTaskCount).toBe(initialTaskCount);
+});

@@ -23,6 +23,14 @@ export class TaskManagerPage {
     return this.page.getByRole('button', { name: 'Add Task' });
   }
 
+  taskItem(name: string) {
+    return this.page.getByRole('listitem').getByText(name);
+  }
+
+  get taskItemCount() {
+    return this.page.getByRole('listitem').count();
+  }
+
   async goto() {
     await this.page.goto('/');
   }
