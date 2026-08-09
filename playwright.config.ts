@@ -2,13 +2,17 @@
 
 import { defineConfig, devices } from '@playwright/test';
 
-const serviceName = process.env.K8S_SERVICE_NAME ?? 'frontend-svc';
 const namespace = process.env.K8S_NAMESPACE ?? 'default';
-const clusterBaseURL = `http://${serviceName}.${namespace}.svc.cluster.local`;
+const frontendServiceName = process.env.K8S_FRONTEND_SERVICE_NAME ?? 'frontend-svc';
+const backendServiceName = process.env.K8S_BACKEND_SERVICE_NAME ?? 'backend-svc';
+const frontendClusterBaseURL = `http://${frontendServiceName}.${namespace}.svc.cluster.local`;
+const backendClusterBaseURL = `http://${backendServiceName}.${namespace}.svc.cluster.local`;
 const isInCluster = Boolean(process.env.KUBERNETES_SERVICE_HOST);
 const baseURL =
-  process.env.PLAYWRIGHT_BASE_URL ??
-  (isInCluster ? clusterBaseURL : 'http://127.0.0.1:8080');
+  process.env.UI_BASE_URL ??
+  (isInCluster ? frontendClusterBaseURL : 'http://127.0.0.1:8080');
+export const apiBaseURL: string =
+  process.env.API_BASE_URL ?? (isInCluster ? backendClusterBaseURL : 'http://127.0.0.1:8080');
 
 /**
  * Read environment variables from file.
@@ -23,6 +27,7 @@ const baseURL =
  */
 export default defineConfig({
   testDir: './tests',
+  globalSetup: './global-setup',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -82,9 +87,9 @@ export default defineConfig({
 
   /* Start local port-forward only when running outside Kubernetes and no explicit base URL was provided. */
   webServer:
-    !isInCluster && !process.env.PLAYWRIGHT_BASE_URL
+    !isInCluster && !process.env.UI_BASE_URL
       ? {
-          command: `kubectl port-forward -n ${namespace} svc/${serviceName} 8080:80`,
+          command: `kubectl port-forward -n ${namespace} svc/${frontendServiceName} 8080:80`,
           url: 'http://127.0.0.1:8080',
           reuseExistingServer: !process.env.CI,
           timeout: 120 * 1000,
