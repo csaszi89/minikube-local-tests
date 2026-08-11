@@ -1,19 +1,14 @@
-import { request } from '@playwright/test';
-import { apiBaseURL } from './playwright.config';
-import { TodoApiHelper } from './helpers/TodoApiHelper';
+import { TodoDbHelper } from './helpers/TodoDbHelper';
 
 async function globalSetup() {
-  const api = await request.newContext({
-    baseURL: apiBaseURL,
-  });
+  const db = new TodoDbHelper();
 
-  const todoApi = new TodoApiHelper(api);
-
-  const tasks = await todoApi.list();
-
-  await Promise.all(tasks.map((task) => todoApi.delete(task.id)));
-
-  await api.dispose();
+  try {
+    await db.connect();
+    await db.clearAll();
+  } finally {
+    await db.disconnect();
+  }
 }
 
 export default globalSetup;
