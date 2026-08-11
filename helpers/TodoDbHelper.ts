@@ -37,14 +37,11 @@ function buildMongoUri(options?: TodoDbHelperOptions): string {
   const isInCluster = Boolean(process.env.KUBERNETES_SERVICE_HOST);
   const serviceName = options?.serviceName ?? process.env.MONGODB_SERVICE_NAME ?? 'mongo-svc';
   const servicePort = options?.servicePort ?? Number(process.env.MONGODB_SERVICE_PORT ?? '27017');
-  const namespace = options?.namespace ?? process.env.K8S_NAMESPACE;
-
-  if (isInCluster && namespace) {
-    return `mongodb://${serviceName}.${namespace}.svc.cluster.local:${servicePort}`;
-  }
+  const namespace =
+    options?.namespace ?? process.env.K8S_NAMESPACE ?? process.env.POD_NAMESPACE ?? 'default';
 
   if (isInCluster) {
-    return `mongodb://${serviceName}:${servicePort}`;
+    return `mongodb://${serviceName}.${namespace}.svc.cluster.local:${servicePort}`;
   }
 
   // Local runs usually need a port-forward or exposed service.
