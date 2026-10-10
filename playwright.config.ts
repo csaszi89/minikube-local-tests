@@ -6,8 +6,6 @@ const namespace = process.env.K8S_NAMESPACE ?? 'default';
 const frontendServiceName = process.env.K8S_FRONTEND_SERVICE_NAME ?? 'frontend-svc';
 const backendServiceName = process.env.K8S_BACKEND_SERVICE_NAME ?? 'backend-svc';
 const backendServicePort = process.env.K8S_BACKEND_SERVICE_PORT ?? '8080';
-const mongoServiceName = process.env.MONGODB_SERVICE_NAME ?? 'mongo-svc';
-const mongoServicePort = process.env.MONGODB_SERVICE_PORT ?? '27017';
 const frontendClusterBaseURL = `http://${frontendServiceName}.${namespace}.svc.cluster.local`;
 const backendClusterBaseURL = `http://${backendServiceName}.${namespace}.svc.cluster.local:${backendServicePort}`;
 const isInCluster = Boolean(process.env.KUBERNETES_SERVICE_HOST);
@@ -23,13 +21,6 @@ const localWebServers = !isInCluster
         ? {
             command: `kubectl port-forward -n ${namespace} svc/${frontendServiceName} 8080:80`,
             url: 'http://127.0.0.1:8080',
-            reuseExistingServer: !process.env.CI,
-            timeout: 120 * 1000,
-          }
-        : undefined,
-      !process.env.MONGODB_URI
-        ? {
-            command: `kubectl port-forward -n ${namespace} svc/${mongoServiceName} ${mongoServicePort}:${mongoServicePort}`,
             reuseExistingServer: !process.env.CI,
             timeout: 120 * 1000,
           }
@@ -50,7 +41,6 @@ const localWebServers = !isInCluster
  */
 export default defineConfig({
   testDir: './tests',
-  globalSetup: './global-setup',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

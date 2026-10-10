@@ -47,4 +47,11 @@ export class TodoApiHelper {
     const response = await this.api.delete(`/api/tasks/${id}`);
     expect(response.ok()).toBeTruthy();
   }
+
+  async clearAll(): Promise<void> {
+    const items = await this.list();
+    for (const item of items) {
+      await this.delete(item.id);
+    }
+  }
 }

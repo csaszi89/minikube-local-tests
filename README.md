@@ -19,10 +19,7 @@ npx playwright install
 
 ### Locally (automatic port-forward)
 
-The config automatically starts `kubectl port-forward` for:
-
-- `frontend-svc` on `127.0.0.1:8080` when `UI_BASE_URL` is not set.
-- `mongo-svc` on `127.0.0.1:27017` when `MONGODB_URI` is not set.
+The config automatically starts `kubectl port-forward` for `frontend-svc` on `127.0.0.1:8080` when `UI_BASE_URL` is not set.
 
 ```bash
 npm run test:e2e
@@ -61,19 +58,19 @@ tests/
   e2e.spec.ts          # e2e tests
   pages/
     TaskManagerPage.ts # Page Object Model
-global-setup.ts        # Deletes all tasks via the API before each test run
 playwright.config.ts   # Playwright configuration
 ```
 
-## Global setup
+## Cleanup
 
-`global-setup.ts` deletes all existing tasks via the API before each test run so that tests start from a clean state.
+`tests/e2e.spec.ts` deletes all existing tasks via the API in an `afterEach` hook, so every test starts from a clean state regardless of run mode (e.g. repeated runs in UI mode).
 
 ## Todo DB helper
 
-`helpers/TodoDbHelper.ts` provides MongoDB operations for todo items: `list`, `create`, `edit`, `delete`, and `clearAll`.
+`helpers/TodoDbHelper.ts` provides MongoDB operations for todo items: `list`, `create`, `edit`, `delete`, and `clearAll`. It is not wired into the test setup; it is available for direct DB assertions if needed.
 
 Connection behavior:
 
 - In-cluster: connects to `mongodb://mongo-svc:27017` (or namespace FQDN when `K8S_NAMESPACE` is set).
-- Local: defaults to `mongodb://127.0.0.1:27017` (typically via `kubectl port-forward`), unless `MONGODB_URI` is explicitly set.
+- Local: defaults to `mongodb://127.0.0.1:27017` (requires a manual `kubectl port-forward`), unless `MONGODB_URI` is explicitly set.
+
