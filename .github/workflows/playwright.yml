@@ -4,24 +4,20 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
+    - name: Sync TestWorkflow definition
+      run: kubectl apply -f k8s/testworkflow.yaml
+    - name: Run tests in-cluster via Testkube
+      run: kubectl testkube run testworkflow minikube-local-tests-e2e -f --download-artifacts --download-dir artifacts
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
-        path: playwright-report/
+        path: artifacts/
         retention-days: 30
