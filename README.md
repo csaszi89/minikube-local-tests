@@ -35,6 +35,30 @@ npx playwright test --ui
 
 When tests run inside a Kubernetes Pod, the config automatically uses cluster-internal service URLs (`svc.cluster.local`).
 
+## CI/CD
+
+Tests run automatically via a self-hosted GitHub Actions runner on push, pull request, and manual trigger (`workflow_dispatch`). See [.github/workflows/playwright.yml](.github/workflows/playwright.yml).
+
+The pipeline does not run Playwright directly on the runner. Instead, it:
+
+1. Applies [k8s/testworkflow.yaml](k8s/testworkflow.yaml) to sync the Testkube `TestWorkflow` definition with the cluster (`kubectl apply`).
+2. Triggers that `TestWorkflow` via the Testkube CLI (`kubectl testkube run testworkflow ... -f --download-artifacts`), which runs the tests **inside a pod in the cluster**, against the in-cluster service URLs.
+3. Downloads the resulting Playwright report/test-results artifacts from Testkube and uploads them as a GitHub Actions artifact.
+
+### Requirements on the self-hosted runner machine
+
+- `kubectl` and the `kubectl-testkube` CLI plugin on `PATH`, pointing at the target cluster.
+- A working kubeconfig for the account the runner process uses.
+- A Testkube instance installed in the cluster (OSS stack: `testkube` namespace with `testkube-api-server`, MongoDB, MinIO, NATS).
+
+### Running the TestWorkflow manually
+
+```powershell
+kubectl apply -f k8s/testworkflow.yaml
+kubectl testkube run testworkflow minikube-local-tests-e2e -f --download-artifacts --download-dir artifacts
+kubectl testkube get testworkflowexecution
+```
+
 ## Environment variables
 
 | Variable | Description | Default |
