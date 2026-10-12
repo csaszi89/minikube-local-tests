@@ -59,6 +59,31 @@ kubectl testkube run testworkflow minikube-local-tests-e2e -f --download-artifac
 kubectl testkube get testworkflowexecution
 ```
 
+## Test reporting (Allure)
+
+Besides the built-in Playwright HTML reporter, tests also produce [Allure](https://allurereport.org/) results (configured in [playwright.config.ts](playwright.config.ts)).
+
+### Viewing the report locally
+
+```bash
+npm run test:e2e
+npm run allure:generate
+npm run allure:open
+```
+
+### Published report (GitHub Pages)
+
+On every CI run, the `publish-report` job (runs on a GitHub-hosted `ubuntu-latest` runner, not the self-hosted one) downloads the `allure-results` produced in the cluster, generates the HTML report, and publishes it to the `gh-pages` branch.
+
+The latest report is publicly available at:
+
+**https://csaszi89.github.io/minikube-local-tests/**
+
+Notes:
+
+- The `gh-pages` branch and the GitHub Pages site are created automatically after the first successful workflow run.
+- The published site is **public** by default, even if the repository itself is private (unless GitHub Enterprise's private Pages visibility is used).
+
 ## Environment variables
 
 | Variable | Description | Default |
