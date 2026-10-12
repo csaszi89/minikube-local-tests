@@ -39,7 +39,14 @@ jobs:
         java-version: '21'
     - name: Generate Allure report
       if: ${{ !cancelled() }}
-      run: npx allure generate "$(find artifacts -type d -name allure-results | head -n 1)" --clean -o allure-report
+      shell: pwsh
+      run: |
+        $resultsDir = Get-ChildItem -Path artifacts -Directory -Recurse -Filter allure-results | Select-Object -First 1 -ExpandProperty FullName
+        if (-not $resultsDir) {
+          Write-Error "No allure-results directory found under artifacts/"
+          exit 1
+        }
+        npx allure generate "$resultsDir" --clean -o allure-report
     - name: Publish Allure report to GitHub Pages
       if: ${{ !cancelled() }}
       uses: peaceiris/actions-gh-pages@v4
