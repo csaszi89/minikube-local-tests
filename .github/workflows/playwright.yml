@@ -9,8 +9,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: self-hosted
-    permissions:
-      contents: write
     steps:
     - uses: actions/checkout@v4
     - name: Sync TestWorkflow definition
@@ -23,32 +21,34 @@ jobs:
         name: playwright-report
         path: artifacts/
         retention-days: 30
-    - name: Setup Node
-      if: ${{ !cancelled() }}
-      uses: actions/setup-node@v4
+
+  publish-report:
+    needs: test
+    if: ${{ !cancelled() }}
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/download-artifact@v4
       with:
-        node-version: 20
-    - name: Install dependencies
-      if: ${{ !cancelled() }}
-      run: npm ci
+        name: playwright-report
+        path: artifacts
     - name: Setup Java (required by Allure)
-      if: ${{ !cancelled() }}
       uses: actions/setup-java@v5
       with:
         distribution: temurin
         java-version: '21'
     - name: Generate Allure report
-      if: ${{ !cancelled() }}
-      shell: pwsh
+      shell: bash
       run: |
-        $resultsDir = Get-ChildItem -Path artifacts -Directory -Recurse -Filter allure-results | Select-Object -First 1 -ExpandProperty FullName
-        if (-not $resultsDir) {
-          Write-Error "No allure-results directory found under artifacts/"
+        resultsDir=$(find artifacts -type d -name allure-results | head -n 1)
+        if [ -z "$resultsDir" ]; then
+          echo "No allure-results directory found under artifacts/"
           exit 1
-        }
-        npx allure generate "$resultsDir" --clean -o allure-report
+        fi
+        npx --yes allure-commandline generate "$resultsDir" --clean -o allure-report
     - name: Publish Allure report to GitHub Pages
-      if: ${{ !cancelled() }}
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
