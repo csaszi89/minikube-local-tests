@@ -27,5 +27,6 @@ spec:
         paths:
           - playwright-report/**
           - test-results/**
+          - allure-results/**
   pod:
     serviceAccountName: default

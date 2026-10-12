@@ -6,7 +6,9 @@
   "scripts": {
     "test:e2e": "playwright test",
     "test:e2e:local": "cross-env PLAYWRIGHT_BASE_URL=http://127.0.0.1:8080 playwright test",
-    "test:e2e:cluster": "cross-env K8S_SERVICE_NAME=my-website-nginx K8S_NAMESPACE=default playwright test"
+    "test:e2e:cluster": "cross-env K8S_SERVICE_NAME=my-website-nginx K8S_NAMESPACE=default playwright test",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,8 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
+    "allure-commandline": "^2.46.1",
+    "allure-playwright": "^3.13.0",
     "cross-env": "^10.1.0",
     "mongodb": "^7.5.0"
   }
