@@ -1,0 +1,6 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","161","Navigate to website and verify header","chromium","2026-10-12","passed","2026-10-12","","e2e.spec.ts","",""
+"","163","Navigate to website and create a task with description","chromium","2026-10-12","passed","2026-10-12","","e2e.spec.ts","",""
+"","145","Navigate to website and try create a task without name","chromium","2026-10-12","passed","2026-10-12","","e2e.spec.ts","",""
+"","175","Navigate to website and create a task without description","chromium","2026-10-12","passed","2026-10-12","","e2e.spec.ts","",""
+"","87","Navigate to website and verify basic elements","chromium","2026-10-12","passed","2026-10-12","","e2e.spec.ts","",""
