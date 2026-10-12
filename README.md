@@ -17,12 +17,20 @@ npx playwright install
 
 ## Running tests
 
+Tests run against three browser projects: Chromium, Firefox, and WebKit (see `projects` in [playwright.config.ts](playwright.config.ts)).
+
 ### Locally (automatic port-forward)
 
 The config automatically starts `kubectl port-forward` for `frontend-svc` on `127.0.0.1:8080` when `UI_BASE_URL` is not set.
 
 ```bash
 npm run test:e2e
+```
+
+To run a single browser:
+
+```bash
+npx playwright test --project=chromium
 ```
 
 ### Interactive UI mode

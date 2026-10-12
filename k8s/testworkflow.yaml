@@ -20,7 +20,7 @@ spec:
     - name: install-dependencies
       shell: npm ci
     - name: install-browsers
-      shell: npx playwright install --with-deps chromium
+      shell: npx playwright install --with-deps
     - name: run-e2e-tests
       shell: npx playwright test
       artifacts:
