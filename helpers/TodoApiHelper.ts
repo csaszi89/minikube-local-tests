@@ -35,12 +35,11 @@ export class TodoApiHelper {
     return response.json();
   }
 
-  async edit(id: string, input: EditTodoInput): Promise<TodoItem> {
+  async edit(id: string, input: EditTodoInput): Promise<void> {
     const response = await this.api.put(`/api/tasks/${id}`, {
       data: input,
     });
     expect(response.ok()).toBeTruthy();
-    return response.json();
   }
 
   async delete(id: string): Promise<void> {

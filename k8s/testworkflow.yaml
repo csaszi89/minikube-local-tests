@@ -21,8 +21,10 @@ spec:
       shell: npm ci
     - name: install-browsers
       shell: npx playwright install --with-deps
-    - name: run-e2e-tests
-      shell: npx playwright test
+    - name: run-api-tests
+      shell: npm run test:api
+    - name: run-ui-tests
+      shell: npm run test:ui
       artifacts:
         paths:
           - playwright-report/**

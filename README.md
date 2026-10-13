@@ -27,6 +27,13 @@ The config automatically starts `kubectl port-forward` for `frontend-svc` on `12
 npm run test:e2e
 ```
 
+To run only the API tests or UI tests:
+
+```bash
+npm run test:api
+npm run test:ui
+```
+
 To run a single browser:
 
 ```bash
