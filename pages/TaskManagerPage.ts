@@ -24,7 +24,37 @@ export class TaskManagerPage {
   }
 
   taskItem(name: string) {
-    return this.page.getByRole('listitem').getByText(name);
+    return this.page.getByRole('listitem').filter({ hasText: name });
+  }
+
+  editTaskButton(name: string) {
+    return this.taskItem(name).getByRole('button', { name: 'Edit' });
+  }
+
+  deleteTaskButton(name: string) {
+    return this.taskItem(name).getByRole('button', { name: 'Delete' });
+  }
+
+  get editingTaskItem() {
+    return this.page
+      .getByRole('listitem')
+      .filter({ has: this.page.getByRole('button', { name: 'Save' }) });
+  }
+
+  get editTaskTitleInput() {
+    return this.editingTaskItem.getByRole('textbox').first();
+  }
+
+  get editTaskDescriptionInput() {
+    return this.editingTaskItem.getByRole('textbox').nth(1);
+  }
+
+  get saveTaskButton() {
+    return this.editingTaskItem.getByRole('button', { name: 'Save' });
+  }
+
+  get cancelTaskButton() {
+    return this.editingTaskItem.getByRole('button', { name: 'Cancel' });
   }
 
   get taskItemCount() {
