@@ -112,7 +112,7 @@ Notes:
 
 ```
 tests/
-  e2e.spec.ts          # e2e tests
+  ui.spec.ts           # UI tests
   pages/
     TaskManagerPage.ts # Page Object Model
 playwright.config.ts   # Playwright configuration
@@ -120,7 +120,7 @@ playwright.config.ts   # Playwright configuration
 
 ## Cleanup
 
-`tests/e2e.spec.ts` deletes all existing tasks via the API in an `afterEach` hook, so every test starts from a clean state regardless of run mode (e.g. repeated runs in UI mode).
+`tests/ui.spec.ts` deletes the task created by each UI test via the API in an `afterEach` hook.
 
 ## Todo DB helper
 
