@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Sync TestWorkflow definition
-      run: kubectl apply -f k8s/testworkflow.yaml
+      run: kubectl apply -f k8s/minikube-local-tests-e2e.yaml
     - name: Run tests in-cluster via Testkube
       run: kubectl testkube run testworkflow minikube-local-tests-e2e -f --download-artifacts --download-dir artifacts
     - uses: actions/upload-artifact@v4
